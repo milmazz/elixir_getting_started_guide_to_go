@@ -22,7 +22,7 @@ defmodule ElixirGettingStartedGuide do
   end
 
   defp generate_nav(yaml) do
-    # Just the "getting started" section for now
+    # Take the "getting started" section for now
     yaml = yaml |> List.first() |> List.wrap()
     Enum.flat_map(yaml, fn(section) ->
       Enum.map(section["pages"], fn(%{"slug" => slug, "title" => title}) ->
@@ -69,11 +69,16 @@ defmodule ElixirGettingStartedGuide do
   end
 
   defp clean_markdown(content) do
-    # Remove frontmatter
     content
     |> String.replace("{% include toc.html %}", "")
-    |> String.replace("# {{ page.title }}", "")
+    |> String.replace(~r/# {{ page.title }}(<span hidden>.<\/span>)?/, "") # The <span hidden>.</span> is a hack used in pattern-matching.md
+    |> remove_frontmatter()
     |> map_links()
+  end
+
+  defp remove_frontmatter(content) do
+    [_frontmatter, content] = String.split(content, ~r/\r?\n---\r?\n/, parts: 2)
+    content
   end
 
   defp map_links(content) do
