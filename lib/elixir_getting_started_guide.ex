@@ -7,18 +7,17 @@ defmodule ElixirGettingStartedGuide do
 
   def run do
     if File.exists?(@docs) do
-        File.rm_rf(@docs)
-        File.mkdir_p(@docs)
+      File.rm_rf(@docs)
+      File.mkdir_p(@docs)
     end
 
-    nav = Mix.Project.config[:app]
-    |> Application.app_dir("#{@submodule}/_data/getting-started.yml")
-    |> YamlElixir.read_from_file()
-    |> generate_nav()
+    nav =
+      Mix.Project.config[:app]
+      |> Application.app_dir("#{@submodule}/_data/getting-started.yml")
+      |> YamlElixir.read_from_file()
+      |> generate_nav()
 
-    nav
-    |> convert_markdown_pages()
-    |> to_epub(nav)
+    nav |> convert_markdown_pages() |> to_epub(nav)
   end
 
   defp generate_nav(yaml) do
@@ -34,18 +33,19 @@ defmodule ElixirGettingStartedGuide do
   defp convert_markdown_pages(config) do
     config
     |> Enum.map(&Task.async(fn ->
-          to_xhtml(&1)
+        to_xhtml(&1)
        end))
     |> Enum.map(&Task.await(&1, :infinity))
   end
 
   defp to_xhtml(%{content: path, dir: dir} = nav) do
-    content = "#{@submodule}#{dir}#{path}"
-    |> String.replace(~r/(.*)\.xhtml/, "\\1.markdown")
-    |> File.read!()
-    |> clean_markdown()
-    |> Markdown.to_html(autolink: true, fenced_code: true, tables: true)
-    |> wrap_html(nav)
+    content =
+      "#{@submodule}#{dir}#{path}"
+      |> String.replace(~r/(.*)\.xhtml/, "\\1.markdown")
+      |> File.read!()
+      |> clean_markdown()
+      |> Markdown.to_html(autolink: true, fenced_code: true, tables: true)
+      |> wrap_html(nav)
 
     unless File.exists?(Path.join(@docs, dir)) do
       File.mkdir_p(Path.join(@docs, dir))
@@ -57,10 +57,12 @@ defmodule ElixirGettingStartedGuide do
   end
 
   defp to_epub(files, nav) do
+    # TODO: Include custom CSS & JS
     config = %BUPE.Config{
       title: "Elixir Getting Started Guide",
       creator: "Plataformatec",
       unique_identifier: "Elixir",
+      source: "#{@homepage}/getting-started/",
       files: files,
       nav: nav
     }
