@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+      xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <meta charset="utf-8" />
+    <title><%= config.label %></title>
+    <meta name="generator" content="BUPE" />
+  </head>
+  <body>
+  <h1><%= config.label %></h1>
+    <%= content %>
+  </body>
+</html>

@@ -1,0 +1,3 @@
+[submodule "priv/elixir-lang.github.com"]
+	path = priv/elixir-lang.github.com
+	url = https://github.com/elixir-lang/elixir-lang.github.com
