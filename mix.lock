@@ -1,4 +1,4 @@
-%{"bupe": {:hex, :bupe, "0.1.0", "698f9a2804b806171a1d6741a7c2554b9e451b9921dc3a0d1278d174157a1df8", [:mix], []},
+%{"bupe": {:git, "https://github.com/milmazz/bupe.git", "a759c5b5ec548c742db036303965e29c758bd392", []},
   "hoedown": {:git, "https://github.com/hoedown/hoedown.git", "980b9c549b4348d50b683ecee6abee470b98acda", []},
   "markdown": {:git, "https://github.com/devinus/markdown.git", "9b3beaf69a9b9c6450526c41d591a94d2eedf1e8", []},
   "yamerl": {:hex, :yamerl, "0.3.2", "9eac1537d251e926f47763ab1db0d9e6e8f2397646c290d58aa6ceebc6832fb7", [:rebar3], []},
