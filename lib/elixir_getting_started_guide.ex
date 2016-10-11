@@ -4,8 +4,8 @@ defmodule ElixirGettingStartedGuide do
   @app Mix.Project.config[:app]
   @docs "doc"
   @homepage "http://elixir-lang.org"
-  @scripts [Application.app_dir(@app, "priv/custom.js")]
-  @styles [Application.app_dir(@app, "priv/custom.css")]
+  @scripts Path.wildcard(Application.app_dir(@app, "priv/dist/app-*.js"))
+  @styles Path.wildcard(Application.app_dir(@app, "priv/dist/app-*.css"))
   @submodule "priv/elixir-lang.github.com"
 
   def run do
