@@ -17,6 +17,6 @@ defmodule ElixirGettingStartedGuide.Mixfile do
   defp deps do
     [{:yaml_elixir, "~> 1.2"},
      {:markdown, github: "devinus/markdown"},
-     {:bupe, "~> 0.1.0"}]
+     {:bupe, github: "milmazz/bupe"}]
   end
 end

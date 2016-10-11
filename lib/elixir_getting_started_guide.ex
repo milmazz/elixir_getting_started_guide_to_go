@@ -1,8 +1,11 @@
 defmodule ElixirGettingStartedGuide do
   require EEx
 
+  @app Mix.Project.config[:app]
   @docs "doc"
   @homepage "http://elixir-lang.org"
+  @scripts [Application.app_dir(@app, "priv/custom.js")]
+  @styles [Application.app_dir(@app, "priv/custom.css")]
   @submodule "priv/elixir-lang.github.com"
 
   def run do
@@ -12,7 +15,7 @@ defmodule ElixirGettingStartedGuide do
     end
 
     nav =
-      Mix.Project.config[:app]
+      @app
       |> Application.app_dir("#{@submodule}/_data/getting-started.yml")
       |> YamlElixir.read_from_file()
       |> generate_nav()
@@ -25,7 +28,8 @@ defmodule ElixirGettingStartedGuide do
     yaml = yaml |> List.first() |> List.wrap()
     Enum.flat_map(yaml, fn(section) ->
       Enum.map(section["pages"], fn(%{"slug" => slug, "title" => title}) ->
-        %{id: slug, label: title, content: "#{slug}.xhtml", dir: section["dir"]}
+        %{id: slug, label: title, content: "#{slug}.xhtml", dir: section["dir"],
+          scripts: @scripts, styles: @styles}
       end)
     end)
   end
@@ -57,13 +61,14 @@ defmodule ElixirGettingStartedGuide do
   end
 
   defp to_epub(files, nav) do
-    # TODO: Include custom CSS & JS
     config = %BUPE.Config{
       title: "Elixir Getting Started Guide",
       creator: "Plataformatec",
       unique_identifier: "Elixir",
       source: "#{@homepage}/getting-started/",
       files: files,
+      scripts: @scripts,
+      styles: @styles,
       nav: nav
     }
 
