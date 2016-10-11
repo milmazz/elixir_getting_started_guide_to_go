@@ -6,6 +6,8 @@
 
 var gulp = require('gulp')
 var $ = require('gulp-load-plugins')({camelize: true})
+var sequence = require('run-sequence')
+var del = require('del')
 var LessPluginNpmImport = require('less-plugin-npm-import')
 var LessPluginAutoPrefix = require('less-plugin-autoprefix')
 var webpack = require('webpack-stream')
@@ -72,6 +74,26 @@ gulp.task('javascript', ['buildHighlight'], function () {
 gulp.task('less', function () {
   return less({src: 'assets/less/app.less', dest: distPath})
 })
+
+gulp.task('lint', function () {
+  return gulp.src([
+    'gulpfile.js',
+    'assets/**/*.js'
+  ])
+    .pipe($.eslint())
+    .pipe($.eslint.format())
+    .pipe($.eslint.failOnError())
+})
+
+gulp.task('build', function (done) {
+  sequence(
+    'clean',
+    ['javascript', 'less'],
+    done
+  )
+})
+
+gulp.task('default', ['lint', 'build'])
 
 /**
  * Helpers
