@@ -7,7 +7,6 @@ defmodule ElixirGettingStartedGuide.Mixfile do
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     escript: escript(),
      deps: deps()]
   end
 
@@ -19,9 +18,5 @@ defmodule ElixirGettingStartedGuide.Mixfile do
     [{:yaml_elixir, "~> 1.2"},
      {:markdown, github: "devinus/markdown"},
      {:bupe, github: "milmazz/bupe"}]
-  end
-
-  defp escript do
-    [main_module: ElixirGettingStartedGuide.CLI]
   end
 end
