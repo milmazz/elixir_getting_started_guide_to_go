@@ -8,7 +8,7 @@ defmodule ElixirGettingStartedGuide do
   @styles Path.wildcard(Application.app_dir(@app, "priv/dist/app-*.css"))
   @submodule "priv/elixir-lang.github.com"
 
-  def run do
+  def run(options \\ [guide: :getting_started]) do
     if File.exists?(@docs) do
       File.rm_rf(@docs)
       File.mkdir_p(@docs)
@@ -18,15 +18,20 @@ defmodule ElixirGettingStartedGuide do
       @app
       |> Application.app_dir("#{@submodule}/_data/getting-started.yml")
       |> YamlElixir.read_from_file()
-      |> generate_nav()
+      |> generate_nav(options)
 
-    nav |> convert_markdown_pages() |> to_epub(nav)
+    nav |> convert_markdown_pages() |> to_epub(nav, options)
   end
 
-  defp generate_nav(yaml) do
-    # Take the "getting started" section for now
-    yaml = yaml |> List.first() |> List.wrap()
-    Enum.flat_map(yaml, fn(section) ->
+  defp generate_nav(yaml, options) do
+    yaml =
+      case options[:guide] do
+        :mix_otp -> Enum.at(yaml, 1)
+        :meta -> List.last(yaml)
+        _ -> List.first(yaml)
+      end
+
+    Enum.flat_map(List.wrap(yaml), fn(section) ->
       Enum.map(section["pages"], fn(%{"slug" => slug, "title" => title}) ->
         %{id: slug, label: title, content: "#{slug}.xhtml", dir: section["dir"],
           scripts: @scripts, styles: @styles}
@@ -60,11 +65,18 @@ defmodule ElixirGettingStartedGuide do
     file_path
   end
 
-  defp to_epub(files, nav) do
+  defp to_epub(files, nav, options) do
+    title =
+      case options[:guide] do
+        :mix_otp -> "Mix and OTP"
+        :meta -> "Meta-programming in Elixir"
+        _ -> "Elixir Getting Started Guide"
+      end
+
     config = %BUPE.Config{
-      title: "Elixir Getting Started Guide",
+      title: title,
       creator: "Plataformatec",
-      unique_identifier: "Elixir",
+      unique_identifier: title_to_filename(title),
       source: "#{@homepage}/getting-started/",
       files: files,
       scripts: @scripts,
@@ -72,7 +84,11 @@ defmodule ElixirGettingStartedGuide do
       nav: nav
     }
 
-    BUPE.build(config, "elixir-getting-started.epub")
+    BUPE.build(config, "#{title_to_filename(title)}.epub")
+  end
+
+  defp title_to_filename(title) do
+    title |> String.replace(" ", "-") |> String.downcase()
   end
 
   defp clean_markdown(content) do
