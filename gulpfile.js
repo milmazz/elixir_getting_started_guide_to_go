@@ -22,7 +22,7 @@ var config = require('./assets/webpack.config')
 var environment = $.util.env.type || 'development'
 var isProduction = environment === 'production'
 
-var distPath = 'priv/dist'
+var distPath = 'assets/dist'
 
 var npmPlugin = new LessPluginNpmImport()
 var autoprefixPlugin = new LessPluginAutoPrefix({
@@ -78,7 +78,7 @@ gulp.task('less', function () {
 gulp.task('lint', function () {
   return gulp.src([
     'gulpfile.js',
-    'assets/**/*.js'
+    'assets/js/**/*.js'
   ])
     .pipe($.eslint())
     .pipe($.eslint.format())
@@ -107,7 +107,7 @@ var javascript = function (options) {
     .pipe(gulp.dest(options.dest))
 }
 
-var less = function(options) {
+var less = function (options) {
   return gulp.src(options.src)
     .pipe($.less({
       plugins: [
