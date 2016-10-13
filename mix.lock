@@ -1,5 +1,4 @@
-%{"bupe": {:git, "https://github.com/milmazz/bupe.git", "a759c5b5ec548c742db036303965e29c758bd392", []},
-  "hoedown": {:git, "https://github.com/hoedown/hoedown.git", "980b9c549b4348d50b683ecee6abee470b98acda", []},
-  "markdown": {:git, "https://github.com/devinus/markdown.git", "9b3beaf69a9b9c6450526c41d591a94d2eedf1e8", []},
+%{"bupe": {:git, "https://github.com/milmazz/bupe.git", "936e48760af31dfd32425c1d72e1577e7d38b5aa", []},
+  "earmark": {:git, "https://github.com/pragdave/earmark.git", "6e172d2bd8f7fbb249077ed9c1582b52a0011350", []},
   "yamerl": {:hex, :yamerl, "0.3.2", "9eac1537d251e926f47763ab1db0d9e6e8f2397646c290d58aa6ceebc6832fb7", [:rebar3], []},
   "yaml_elixir": {:hex, :yaml_elixir, "1.2.1", "4a8ee3b25598100c710ff11dde4d79b6335608ac092d69aab45cc7475b5abc4d", [:mix], [{:yamerl, "~> 0.3.2", [hex: :yamerl, optional: false]}]}}

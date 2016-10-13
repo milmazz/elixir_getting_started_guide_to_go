@@ -1,12 +1,10 @@
 defmodule ElixirGettingStartedGuide do
   require EEx
 
-  @app Mix.Project.config[:app]
   @docs "doc"
   @homepage "http://elixir-lang.org"
-  @scripts Path.wildcard(Application.app_dir(@app, "priv/dist/app-*.js"))
-  @styles Path.wildcard(Application.app_dir(@app, "priv/dist/app-*.css"))
-  @submodule "priv/elixir-lang.github.com"
+  @scripts Path.wildcard("../priv/dist/app-*.js")
+  @styles Path.wildcard("../priv/dist/app-*.css")
 
   def run(options \\ [guide: :getting_started]) do
     if File.exists?(@docs) do
@@ -15,8 +13,9 @@ defmodule ElixirGettingStartedGuide do
     end
 
     nav =
-      @app
-      |> Application.app_dir("#{@submodule}/_data/getting-started.yml")
+      options[:site]
+      |> Path.expand()
+      |> Path.join("_data/getting-started.yml")
       |> YamlElixir.read_from_file()
       |> generate_nav(options)
 
@@ -50,11 +49,13 @@ defmodule ElixirGettingStartedGuide do
 
   defp to_xhtml(%{content: path, dir: dir} = nav, options) do
     content =
-      "#{@submodule}#{dir}#{path}"
+      options[:site]
+      |> Path.expand()
+      |> Path.join("#{dir}#{path}")
       |> String.replace(~r/(.*)\.xhtml/, "\\1.markdown")
       |> File.read!()
       |> clean_markdown(options)
-      |> Markdown.to_html(autolink: true, fenced_code: true, tables: true)
+      |> Earmark.to_html()
       |> wrap_html(nav)
 
     unless File.exists?(Path.join(@docs, dir)) do
@@ -80,7 +81,7 @@ defmodule ElixirGettingStartedGuide do
       creator: "Plataformatec",
       unique_identifier: title_to_filename(title),
       source: "#{@homepage}/getting-started/",
-      files: files,
+      pages: files,
       scripts: @scripts,
       styles: @styles,
       nav: nav
