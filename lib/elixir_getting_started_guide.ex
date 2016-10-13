@@ -3,8 +3,6 @@ defmodule ElixirGettingStartedGuide do
 
   @docs "doc"
   @homepage "http://elixir-lang.org"
-  @scripts Path.wildcard("../priv/dist/app-*.js")
-  @styles Path.wildcard("../priv/dist/app-*.css")
 
   def run(options \\ [guide: :getting_started]) do
     if File.exists?(@docs) do
@@ -34,7 +32,7 @@ defmodule ElixirGettingStartedGuide do
     Enum.flat_map(List.wrap(yaml), fn(section) ->
       Enum.map(section["pages"], fn(%{"slug" => slug, "title" => title}) ->
         %{id: slug, label: title, content: "#{slug}.xhtml", dir: section["dir"],
-          scripts: @scripts, styles: @styles}
+          scripts: List.wrap(options[:scripts]), styles: List.wrap(options[:styles])}
       end)
     end)
   end
@@ -82,8 +80,8 @@ defmodule ElixirGettingStartedGuide do
       unique_identifier: title_to_filename(title),
       source: "#{@homepage}/getting-started/",
       pages: files,
-      scripts: @scripts,
-      styles: @styles,
+      scripts: List.wrap(options[:scripts]),
+      styles: List.wrap(options[:styles]),
       nav: nav
     }
 
