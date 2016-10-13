@@ -1,9 +1,9 @@
 # Elixir Getting Started Guide (EPUB)
 
 ```console
-$ git clone --recursive https://github.com/milmazz/elixir_getting_started_guide_to_go
+$ git clone https://github.com/milmazz/elixir_getting_started_guide_to_go
 $ cd elixir_getting_started_guide_to_go
 $ mix deps.get
 $ mix escript.build
-$ ./elixir-getting-started-guide priv/elixir-lang.github.com
+$ ./elixir-getting-started-guide path/to/elixir-lang.github.com assets/dist/app-0cc3b4da6e.js assets/dist/app-1bac334b99.css
 ```
