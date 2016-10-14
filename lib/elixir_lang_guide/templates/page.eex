@@ -6,10 +6,10 @@
     <title><%= config.label %></title>
     <meta name="generator" content="BUPE" />
     <%= for style <- config.styles do %>
-      <link type="text/css" rel="stylesheet" href="../assets/<%= Path.basename(style) %>" />
+      <link type="text/css" rel="stylesheet" href="assets/<%= Path.basename(style) %>" />
     <% end %>
     <%= for script <- config.scripts do %>
-     <script src="../assets/<%= Path.basename(script) %>" type="text/javascript"></script>
+     <script src="assets/<%= Path.basename(script) %>" type="text/javascript"></script>
     <% end %>
   </head>
   <body>

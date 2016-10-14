@@ -1,6 +1,6 @@
-defmodule ElixirGettingStartedGuideTest do
+defmodule ElixirLangGuideTest do
   use ExUnit.Case
-  doctest ElixirGettingStartedGuide
+  doctest ElixirLangGuide
 
   test "the truth" do
     assert 1 + 1 == 2
