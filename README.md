@@ -1,4 +1,4 @@
-# Elixir Getting Started Guide (EPUB)
+# Elixir Lang Guides (EPUB format)
 
 ```console
 $ git clone https://github.com/milmazz/elixir_getting_started_guide_to_go

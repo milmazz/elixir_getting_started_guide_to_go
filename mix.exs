@@ -1,8 +1,8 @@
-defmodule ElixirGettingStartedGuide.Mixfile do
+defmodule ElixirLangGuide.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :elixir_getting_started_guide,
+    [app: :elixir_lang_guide,
      version: "0.1.0",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
@@ -22,6 +22,6 @@ defmodule ElixirGettingStartedGuide.Mixfile do
   end
 
   defp escript do
-    [main_module: ElixirGettingStartedGuide.CLI]
+    [main_module: ElixirLangGuide.CLI]
   end
 end

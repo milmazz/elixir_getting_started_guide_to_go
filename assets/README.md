@@ -1,6 +1,6 @@
 # Assets
 
-In this directory live all assets for `ElixirGettingStartedGuide`. The ready to
+In this directory live all assets for `ElixirLangGuide`. The ready to
 use built versions are found in `priv/dist`. To change any of them read please
 read the following instructions:
 
