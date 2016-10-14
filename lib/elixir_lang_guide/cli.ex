@@ -2,28 +2,21 @@ defmodule ElixirLangGuide.CLI do
   @shortdoc "CLI interface to convert Elixir Guides to EPUB format"
 
   @moduledoc """
-  Uses `ElixirLangGuide.run/1` to generate an EPUB document from the given Elixir
-  Guide, by default, this program takes the "Getting Started" guide as input.
+  Convert the Elixir Lang Guides to EPUB format. By default the "Getting
+  Started" is converted, but, you can pass parameter to choose the
+  "Meta-programming with Elixir" or "Mix and OTP" guides.
 
   ## Command line options
 
-    * `--guide`, `-g` - Guide that you want to process, options: `getting_started`,
-      `meta` or `mix_otp`, default: `getting_started`
-    * `--help`, `-h` - Show help
-    * `--output`, `-o` - Output directory for the EPUB document, default: `doc`
-    * `--scripts`, `-s` - List of custom JS files to include in the EPUB document
-    * `--styles`, `-c` - List of custom CSS files to include in the EPUB document
-    * `--version`, `-v` - Show version
-  """
-
-  @help_message """
-  usage:
-
-      elixir_lang_guide SITE_ROOT
-
-  Convert the Elixir Lang Guides to EPUB format. By default the "Getting Started"
-  is converted, but, you can pass parameter to choose the "Meta-programming with
-  Elixir" or "Mix and OTP" guides.
+    * `-g`, `--guide` - Guide that you want to convert, options:
+      `getting_started`, `meta` or `mix_otp`, default: `getting_started`
+    * `-h`, `--help` - Show help
+    * `-o`, `--output` - Output directory for the EPUB document, default: `doc`
+    * `-s`, `--scripts` - List of custom JS files to include in the EPUB
+      document
+    * `-c`, `--styles` - List of custom CSS files to include in the EPUB
+      document
+    * `-v`, `--version` - Show version
   """
 
   def main(args) do
@@ -33,7 +26,8 @@ defmodule ElixirLangGuide.CLI do
   end
 
   defp parse_args(args) do
-    switches = [help: :boolean, scripts: :keep, styles: :keep, version: :boolean]
+    switches = [help: :boolean, scripts: :keep, styles: :keep,
+                version: :boolean]
     aliases = [g: :guide, h: :help, o: :output, v: :version]
 
     parse = OptionParser.parse(args, switches: switches, aliases: aliases)
@@ -46,17 +40,33 @@ defmodule ElixirLangGuide.CLI do
   end
 
   defp process(:help) do
-    IO.puts(@help_message)
+    {_, more_info} = Code.get_docs(__MODULE__, :moduledoc)
+    usage = ~S"""
+    Usage:
+      elixir_lang_guide SITE_ROOT [OPTIONS]
+
+    Examples:
+      elixir_lang_guide ../elixir-lang.github.com
+      elixir_lang_guide ../elixir-lang.github.com --guide "meta"
+
+    """
+    IO.puts usage <> more_info
   end
 
   defp process(:version) do
     IO.puts "ElixirLangGuide v#{ElixirLangGuide.version()}"
   end
 
-  defp process({:run, root_dir, _opts}) do
-    opts = %ElixirLangGuide.Config{
-      root_dir: root_dir
-    }
-    ElixirLangGuide.to_epub(opts)
+  defp process({:run, root_dir, opts}) when is_binary(root_dir) and is_list(opts) do
+    opts
+    |> process_keep(:styles)
+    |> process_keep(:scripts)
+    |> Keyword.put(:root_dir, root_dir)
+    |> ElixirLangGuide.to_epub()
+  end
+
+  defp process_keep(options, key) do
+    values = Keyword.get_values(options, key)
+    if values == [], do: options, else: Keyword.put(options, key, values)
   end
 end

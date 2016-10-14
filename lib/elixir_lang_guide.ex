@@ -1,4 +1,10 @@
 defmodule ElixirLangGuide do
+  @moduledoc """
+  The idea behind this application is to offer an efficient way to transform
+  the [Elixir Lang guides][getting_started] into an EPUB document.
+
+  [getting_started]: http://elixir-lang.org/getting-started/
+  """
 
   @vsn Mix.Project.config[:version]
 
@@ -9,8 +15,8 @@ defmodule ElixirLangGuide do
     You can find more information about this options in the `ElixirLangGuide.CLI` module.
     """
     @homepage "http://elixir-lang.org"
-    @scripts Path.expand(Path.wildcard("../assets/dist/app-*.js"))
-    @styles Path.expand(Path.wildcard("../assets/dist/app-*.css"))
+    @scripts Path.wildcard(Path.join(__DIR__, "../assets/dist/app-*.js"))
+    @styles Path.wildcard(Path.join(__DIR__, "../assets/dist/app-*.css"))
 
     defstruct [
       guide: "getting_started",
@@ -31,11 +37,18 @@ defmodule ElixirLangGuide do
     }
   end
 
-  @spec to_epub(Config.t) :: String.t
+  @doc """
+  Convert a given Elixir Lang guide to EPUB format
+  """
+  @spec to_epub(Keyword.t) :: String.t
   def to_epub(options) do
-    ElixirLangGuide.EPUB.run(%Config{})
+    config = struct(Config, options)
+    ElixirLangGuide.EPUB.run(config)
   end
 
+  @doc """
+  Returns the current version of this application
+  """
   @spec version :: String.t
   def version, do: @vsn
 end
