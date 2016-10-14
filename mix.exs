@@ -8,7 +8,8 @@ defmodule ElixirLangGuide.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps(),
-     escript: escript()]
+     escript: escript(),
+     docs: docs()]
   end
 
   def application do
@@ -17,11 +18,16 @@ defmodule ElixirLangGuide.Mixfile do
 
   defp deps do
     [{:yaml_elixir, "~> 1.2"},
-     {:earmark, github: "pragdave/earmark"},
-     {:bupe, github: "milmazz/bupe"}]
+     {:earmark, "~> 1.0"},
+     {:bupe, github: "milmazz/bupe"},
+     {:ex_doc, "~> 0.14", only: :dev}]
   end
 
   defp escript do
     [main_module: ElixirLangGuide.CLI]
+  end
+
+  defp docs do
+    [main: "readme", extras: ["README.md"]]
   end
 end

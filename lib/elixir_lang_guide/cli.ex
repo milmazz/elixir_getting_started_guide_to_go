@@ -19,6 +19,7 @@ defmodule ElixirLangGuide.CLI do
     * `-v`, `--version` - Show version
   """
 
+  @spec main(OptionParser.argv) :: String.t
   def main(args) do
     args
     |> parse_args()

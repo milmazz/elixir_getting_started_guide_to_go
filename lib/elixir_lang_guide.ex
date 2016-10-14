@@ -1,9 +1,9 @@
 defmodule ElixirLangGuide do
   @moduledoc """
   The idea behind this application is to offer an efficient way to transform
-  the [Elixir Lang guides][getting_started] into an EPUB document.
+  the [Elixir Lang guides](http://elixir-lang.org/getting-started/) into an
+  EPUB document.
 
-  [getting_started]: http://elixir-lang.org/getting-started/
   """
 
   @vsn Mix.Project.config[:version]
