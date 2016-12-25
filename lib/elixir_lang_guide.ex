@@ -24,7 +24,8 @@ defmodule ElixirLangGuide do
       output: "doc",
       root_dir: nil,
       scripts: @scripts,
-      styles: @styles
+      styles: @styles,
+      images: nil
     ]
 
     @type t :: %__MODULE__{
@@ -33,7 +34,8 @@ defmodule ElixirLangGuide do
       output: Path.t,
       root_dir: Path.t,
       scripts: [Path.t],
-      styles: [Path.t]
+      styles: [Path.t],
+      images: [Path.t]
     }
   end
 
