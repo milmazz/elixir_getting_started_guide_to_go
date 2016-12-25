@@ -19,7 +19,7 @@ defmodule ElixirLangGuide.Mixfile do
   defp deps do
     [{:yaml_elixir, "~> 1.3"},
      {:earmark, "~> 1.0"},
-     {:bupe, github: "milmazz/bupe"},
+     {:bupe, "~> 0.3.0"},
      {:ex_doc, "~> 0.14", only: :dev}]
   end
 
