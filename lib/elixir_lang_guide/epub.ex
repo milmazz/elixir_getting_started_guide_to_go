@@ -114,7 +114,7 @@ defmodule ElixirLangGuide.EPUB do
     |> remove_raw_endraw_tags()
     |> remove_frontmatter()
     |> fix_backslashes()
-    |> update_image_paths()
+    |> fix_images()
     |> map_links(options)
   end
 
@@ -142,8 +142,8 @@ defmodule ElixirLangGuide.EPUB do
     String.replace(content, ~r/backslashes \(`\\`\) on Windows/, ~S"backslashes (`\\\\`) on Windows")
   end
 
-  defp update_image_paths(content) do
-    String.replace(content, ~r{/images/contents/kv-observer.png}, "assets/kv-observer.png")
+  defp fix_images(content) do
+    String.replace(content, ~r{/images/contents/kv-observer.png" width="640px}, "assets/kv-observer.png")
   end
 
   defp map_links(content, options) do
