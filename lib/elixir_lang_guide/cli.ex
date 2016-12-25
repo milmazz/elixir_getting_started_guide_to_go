@@ -64,6 +64,7 @@ defmodule ElixirLangGuide.CLI do
     |> process_keep(:scripts)
     |> Keyword.put(:root_dir, root_dir)
     |> ElixirLangGuide.to_epub()
+    |> IO.puts()
   end
 
   defp process_keep(options, key) do

@@ -10,11 +10,6 @@ defmodule ElixirLangGuide.EPUB do
   """
   @spec run(ElixirLangGuide.Config.t) :: String.t
   def run(options) do
-    if File.exists?(options.output) do
-      File.rm_rf(options.output)
-      File.mkdir_p(options.output)
-    end
-
     nav =
       options.root_dir
       |> Path.expand()
@@ -79,6 +74,13 @@ defmodule ElixirLangGuide.EPUB do
         _ -> raise "invalid guide, allowed: `mix_otp`, `meta` or `getting_started`"
       end
 
+    images =
+      if options.guide == "mix_otp" do
+        [options.root_dir |> Path.join("images/contents/kv-observer.png")]
+      else
+        []
+      end
+
     config = %BUPE.Config{
       title: title,
       creator: "Plataformatec",
@@ -87,10 +89,18 @@ defmodule ElixirLangGuide.EPUB do
       pages: files,
       scripts: List.wrap(options.scripts),
       styles: List.wrap(options.styles),
+      images: images,
       nav: nav
     }
 
-    BUPE.build(config, "#{title_to_filename(title)}.epub")
+    output_file = "#{options.output}/#{title_to_filename(title)}.epub"
+    BUPE.build(config, output_file)
+    delete_generated_files(files)
+    Path.relative_to_cwd(output_file)
+  end
+
+  defp delete_generated_files(files) do
+    Enum.map(files, &File.rm!(&1))
   end
 
   defp title_to_filename(title) do
@@ -99,10 +109,28 @@ defmodule ElixirLangGuide.EPUB do
 
   defp clean_markdown(content, options) do
     content
-    |> String.replace("{% include toc.html %}", "")
-    |> String.replace(~r/# {{ page.title }}(<span hidden>.<\/span>)?/, "") # The <span hidden>.</span> is a hack used in pattern-matching.md
+    |> remove_includes()
+    |> remove_span_hidden_hack()
+    |> remove_raw_endraw_tags()
     |> remove_frontmatter()
+    |> fix_backslashes()
+    |> update_image_paths()
     |> map_links(options)
+  end
+
+  defp remove_includes(content) do
+    content
+    |> String.replace("{% include toc.html %}", "")
+    |> String.replace("{% include mix-otp-preface.html %}", "")
+  end
+
+  # The <span hidden>.</span> is a hack used in pattern-matching.md
+  defp remove_span_hidden_hack(content) do
+    String.replace(content, ~r/# {{ page.title }}(<span hidden>.<\/span>)?/, "")
+  end
+
+  defp remove_raw_endraw_tags(content) do
+    String.replace(content, ~r/{% (end)?raw %}/, "")
   end
 
   defp remove_frontmatter(content) do
@@ -110,16 +138,24 @@ defmodule ElixirLangGuide.EPUB do
     content
   end
 
+  defp fix_backslashes(content) do
+    String.replace(content, ~r/backslashes \(`\\`\) on Windows/, ~S"backslashes (`\\\\`) on Windows")
+  end
+
+  defp update_image_paths(content) do
+    String.replace(content, ~r{/images/contents/kv-observer.png}, "assets/kv-observer.png")
+  end
+
   defp map_links(content, options) do
     Regex.replace(~r/\[([^\]]+)\]\(([^\)]+)\)/, content, fn(_, text, href) ->
       case URI.parse(href) do
-        %URI{scheme: nil, path: "/getting-started/meta/" <> path } ->
+        %URI{scheme: nil, path: "/getting-started/meta/" <> path} ->
           map_meta_links(text, path, options)
-        %URI{scheme: nil, path: "/getting-started/mix-otp/" <> path } ->
+        %URI{scheme: nil, path: "/getting-started/mix-otp/" <> path} ->
           map_mix_otp_link(text, path, options)
-        %URI{scheme: nil, path: "/getting-started/" <> path } ->
+        %URI{scheme: nil, path: "/getting-started/" <> path} ->
           map_getting_started_links(text, path, options)
-        %URI{scheme: nil, path: "/" <> path } ->
+        %URI{scheme: nil, path: "/" <> path} ->
           "[#{text}](#{options.homepage}/#{path})"
         _ ->
           "[#{text}](#{href})"

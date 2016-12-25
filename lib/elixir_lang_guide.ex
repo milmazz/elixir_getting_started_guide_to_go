@@ -25,7 +25,7 @@ defmodule ElixirLangGuide do
       root_dir: nil,
       scripts: @scripts,
       styles: @styles,
-      images: nil
+      images: []
     ]
 
     @type t :: %__MODULE__{
